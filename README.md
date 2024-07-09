@@ -1,6 +1,6 @@
-![Koochi](https://utfs.io/f/9d689796-3b1a-4140-99ba-efe074139e6d-q4rzvd.png)
+![Community](https://utfs.io/f/e8ce1d9e-b607-425b-86b9-4d312d243de3-5bd0h9.png)
 
-Koochi is a Discord Clone project built with Next.js 14 and React, featuring real-time chat, video and audio communication, file uploading, and authentication.
+Community is a Discord Clone project built with Next.js 14 and React, featuring real-time chat, video and audio communication, file uploading, and authentication.
 
 ## Technologies Used
 
@@ -51,7 +51,7 @@ To get a local copy up and running follow these simple steps.
    ```sh
    npm run dev
    ```
-5. Open your browser and navigate to `http://localhost:3000` to view Koochi.
+5. Open your browser and navigate to `http://localhost:3000` to view Community.
 
 ## Contributing
 
