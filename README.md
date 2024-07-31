@@ -5,7 +5,7 @@ Community is a Discord Clone project built with Next.js 14 and React, featuring 
 ## Technologies Used
 
 - **Frontend:** Next.js 14, React
-- **Backend:** Prisma (Database), Socket.IO (Real-time Chat)
+- **Backend:** Prisma (Database), NodeJs,Socket.IO (Real-time Chat)
 - **Additional Services:** Livekit (Video and Audio Chat), Uploadthings (File Upload), Clerk (Authentication)
 
 ## Features
