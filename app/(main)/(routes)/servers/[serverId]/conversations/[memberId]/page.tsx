@@ -9,51 +9,56 @@ import { ChatMessages } from "@/components/chat/chat-messages";
 import { ChatInput } from "@/components/chat/chat-input";
 import { MediaRoom } from "@/components/media-room";
 
+// ✅ Use absolute URL to prevent deployment issues
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
 interface MemberIdPageProps {
   params: {
     memberId: string;
     serverId: string;
-  },
+  };
   searchParams: {
     video?: boolean;
-  }
+  };
 }
 
-const MemberIdPage = async ({
-  params,
-  searchParams,
-}: MemberIdPageProps) => {
+const MemberIdPage = async ({ params, searchParams }: MemberIdPageProps) => {
   const profile = await currentProfile();
 
+  // 🔥 Fix: Ensure absolute redirect URL
   if (!profile) {
-    return redirectToSignIn();
+    return redirectToSignIn({
+      returnBackUrl: `${APP_URL}/servers/${params.serverId}/conversations/${params.memberId}`,
+    });
   }
 
-  const currentMember = await db.member.findFirst({
-    where: {
-      serverId: params.serverId,
-      profileId: profile.id,
-    },
-    include: {
-      profile: true,
-    },
-  });
+  // ✅ Optimize: Fetch currentMember and conversation in parallel
+  const [currentMember, conversation] = await Promise.all([
+    db.member.findFirst({
+      where: {
+        serverId: params.serverId,
+        profileId: profile.id,
+      },
+      include: {
+        profile: true,
+      },
+    }),
+    getOrCreateConversation(profile.id, params.memberId),
+  ]);
 
+  // 🔥 Fix: Prevent further execution after redirect
   if (!currentMember) {
-    return redirect("/");
+    return redirect(`${APP_URL}/servers/${params.serverId}`);
   }
-
-  const conversation = await getOrCreateConversation(currentMember.id, params.memberId);
 
   if (!conversation) {
-    return redirect(`/servers/${params.serverId}`);
+    return redirect(`${APP_URL}/servers/${params.serverId}`);
   }
 
   const { memberOne, memberTwo } = conversation;
-
   const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
-  return ( 
+  return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader
         imageUrl={otherMember.profile.imageUrl}
@@ -61,14 +66,10 @@ const MemberIdPage = async ({
         serverId={params.serverId}
         type="conversation"
       />
-      {searchParams.video && (
-        <MediaRoom
-          chatId={conversation.id}
-          video={true}
-          audio={true}
-        />
-      )}
-      {!searchParams.video && (
+
+      {searchParams.video ? (
+        <MediaRoom chatId={conversation.id} video={true} audio={true} />
+      ) : (
         <>
           <ChatMessages
             member={currentMember}
@@ -94,7 +95,7 @@ const MemberIdPage = async ({
         </>
       )}
     </div>
-   );
-}
- 
+  );
+};
+
 export default MemberIdPage;
