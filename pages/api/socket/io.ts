@@ -15,35 +15,35 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const path = "/api/socket/io";
     const httpServer: NetServer = res.socket.server as any;
     
-    // Create Socket.IO server with explicit cors configuration
+    console.log("🟢 Initializing new Socket.IO server...");
+
     const io = new ServerIO(httpServer, {
-      path: path,
-      addTrailingSlash: false, // No need for ts-ignore with proper typing
+      path,
       cors: {
-        origin: process.env.NODE_ENV === 'production' 
-          ? "https://community-9rw3.onrender.com" 
-          : ["http://localhost:3000"], // Allow localhost in development
+        origin: process.env.NODE_ENV === "production"
+          ? "https://community-9rw3.onrender.com"
+          : "http://localhost:3000", // Fixed: No need for an array here
         methods: ["GET", "POST"],
-        credentials: true
-      }
+        credentials: true,
+      },
+      transports: ["websocket", "polling"], // 🔥 Ensures proper transport fallback
     });
-    
-    // Store the Socket.IO instance on the server
+
     res.socket.server.io = io;
-    
-    // Set up your socket event handlers here
+
     io.on("connection", (socket) => {
-      console.log("Socket connected:", socket.id);
-      
-      // Your socket event handlers...
-      
-      socket.on("disconnect", () => {
-        console.log("Socket disconnected:", socket.id);
+      console.log("✅ Socket connected:", socket.id);
+
+      socket.on("disconnect", (reason) => {
+        console.log("❌ Socket disconnected:", socket.id, "Reason:", reason);
       });
     });
+
+  } else {
+    console.log("⚡ Using existing Socket.IO instance...");
   }
 
   res.end();
-}
+};
 
 export default ioHandler;
