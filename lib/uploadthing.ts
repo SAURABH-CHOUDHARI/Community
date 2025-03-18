@@ -1,9 +1,7 @@
-import {
-  generateUploadButton,
-  generateUploadDropzone,
-} from "@uploadthing/react";
- 
+// lib/uploadthing.ts
+import { createUploadthing } from "uploadthing/next";
+import { UploadButton, UploadDropzone } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
- 
-export const UploadButton = generateUploadButton<OurFileRouter>();
-export const UploadDropzone = generateUploadDropzone<OurFileRouter>();
+
+// Export the components directly instead of generating them
+export { UploadButton, UploadDropzone };
