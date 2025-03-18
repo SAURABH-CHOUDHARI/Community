@@ -21,7 +21,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       addTrailingSlash: false, // No need for ts-ignore with proper typing
       cors: {
         origin: process.env.NODE_ENV === 'production' 
-          ? "https://community-9rw3.onrender.com" // Disable CORS in production
+          ? "https://community-9rw3.onrender.com" 
           : ["http://localhost:3000"], // Allow localhost in development
         methods: ["GET", "POST"],
         credentials: true
