@@ -71,7 +71,7 @@ export const ChatMessages = ({
     count: data?.pages?.[0]?.items?.length ?? 0,
   })
 
-  if (status === "pending") {
+  if (status === "loading") {
     return (
       <div className="flex flex-col flex-1 justify-center items-center">
         <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
@@ -79,9 +79,9 @@ export const ChatMessages = ({
           Loading messages...
         </p>
       </div>
-    )
+    );
   }
-
+  
   if (status === "error") {
     return (
       <div className="flex flex-col flex-1 justify-center items-center">
@@ -90,8 +90,9 @@ export const ChatMessages = ({
           Something went wrong!
         </p>
       </div>
-    )
+    );
   }
+  
 
   return (
     <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
